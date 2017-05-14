@@ -1,19 +1,9 @@
 #include <stdio.h>
-
-
 int main(){
-	int w,c=1;
-	long s=1;
+	long s=1,c=1;
 	for(int i = 3;i <= 1001;i+=2){
-		w=(i-1);
-		c+=w;
-		s+=c;
-		c+=w;
-		s+=c;
-		c+=w;
-		s+=c;
-		c+=w;
-		s+=c;
+		s+=4*c+10*(i-1);
+		c+=4*(i-1);
 	}
 	printf("%ld\n",s);
 }
