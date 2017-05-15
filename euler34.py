@@ -2,9 +2,11 @@
 #https://oeis.org/A068652 <-list of circular primes
 #2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97 
 #this solution takes roughly 1 min :(.
+#on second thought ignoring ones that contain even numbers or 5
+#made this take less than 1 second to solve :)
 
 def solve():
-    file = open("testfile.txt","r")
+    file = open("primes.txt","r")
     primes  = [int(x) for x in file.read().split(',')]
     file.close()
     r = primes[:]
@@ -15,6 +17,8 @@ def solve():
         if i in rotations:
             continue
         string = str(i)
+        if '2' in string or '5' in string or '4' in string or '6' in string or '8' in string or '0' in string:
+            continue
         flag = True
         temp = []
         for digit in range(0,len(string)):
