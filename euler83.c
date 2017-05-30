@@ -13,18 +13,17 @@ int main(){
 	//const int size = 5;
 	//long m[][5] = {{131,673,234,103,18},{201,96,342,965,150},{630,803,746,422,111},{537,699,497,121,956},{805,732,524,37,331}};
 	const int size = 80;
-	long m[size][size];
-	long r[size][size];//length
-	short ignore[size][size];
-	int i,j;
-	long k;
+	int m[size][size];
+	int r[size][size];//length
+	char ignore[size][size];
+	int i,j,k;
 
 	//open file
 	FILE *file = fopen("p081_matrix.txt","r");
 	if(size==80)//dont read on test
 	for(i = 0;i < 80;++i){
 		for(j = 0;j < 80;++j){
-			fscanf(file,"%ld,",&m[i][j]);
+			fscanf(file,"%d,",&m[i][j]);
 		}
 	}
 	printf("Solve for %d by %d\n",size,size);
@@ -63,6 +62,6 @@ int main(){
 			}
 		}
 	}
-	printf("%ld\n",r[size-1][size-1]);
+	printf("%d\n",r[size-1][size-1]);
 
 }
