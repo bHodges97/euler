@@ -7,29 +7,9 @@ typedef struct{
 	char suit;
 }card;
 
-void printhand(card *in){
-	for(int i = 0;i < 5;++i){
-		printf("%d%c",in[i].rank,in[i].suit);
-	}
-}
-
 void fix(char *in){
-	switch(*in){
-		case 'A':
-			*in='9'+5;
-			break;
-		case 'K':
-			*in='9'+4;
-			break;
-		case 'Q':
-			*in='9'+3;
-			break;
-		case 'J':
-			*in='9'+2;
-			break;
-		case 'T':
-			*in='9'+1;
-	}
+	const char arr[] = {'T','J','Q','K','A'};
+	for(int i = 0;i < 5;++i)if(*in==arr[i]){*in=10+i;return;}
 	*in-='0';
 }
 
@@ -54,33 +34,24 @@ void sort(card *in,int size){
 }
 
 int eval(card *in){
-	bool flush = true;
-	bool straight = true;
+	bool flush = true,straight = true;
 	bool equ[4];
 	int i;
 	for(i = 0;i < 4;++i){
-		if(in[i].suit != in[i+1].suit){
-			flush = false;
-		}
-		if(in[i].rank+1 != in[i+1].rank){
-			straight = false;
-		}
+		if(in[i].suit != in[i+1].suit)flush = false;
+		if(in[i].rank+1 != in[i+1].rank)straight = false;
 		equ[i] = in[i].rank == in[i+1].rank;
 	}
+
 	//straight flush + royal flush
-	if(straight && flush){
-		return 900+in[0].rank;
-	}
+	if(straight && flush)return 900+in[0].rank;
+
 	//four of a kind
-	if(equ[0] && equ[1] && equ[2] && equ[3]){
-		return 800+in[0].rank;
-	}
+	if(equ[0] && equ[1] && equ[2] && equ[3])return 800+in[0].rank;
+	
 	//full house
-	if(equ[0] && equ[2] && equ[3]){//does 3 take precedence over 2 cards idk the result gets accepted by euler
-		return 700+in[3].rank;
-	}else if(equ[0] && equ[1] && equ[3]){
-		return 700+in[3].rank;
-	}
+	if(equ[0] && equ[2] && equ[3])return 700+in[3].rank;
+	if(equ[0] && equ[1] && equ[3])return 700+in[1].rank;
 	
 	//flush and straight
 	if(flush)return 600+in[0].rank;
@@ -88,15 +59,14 @@ int eval(card *in){
 
 	//three of a kind
 	if(equ[0] && equ[1])return 400+in[0].rank;
-	if (equ[1] && equ[2])return 400+in[1].rank;
+	if(equ[1] && equ[2])return 400+in[1].rank;
 	if(equ[2] && equ[3])return 400+in[2].rank;
 	
 	//2 pairs
-	if((equ[0] && equ[2]) || (equ[0] && equ[3])){
-		return 300+in[2].rank;
-	}else if(equ[1] && equ[3]){
-		return 300+in[3].rank;
-	}
+	if(equ[0] && equ[2])return 300+in[2].rank;
+	if(equ[0] && equ[3])return 300+in[3].rank;
+	if(equ[1] && equ[3])return 300+in[3].rank;
+
 	//1 pair
 	if(equ[0])return in[0].rank;
 	if(equ[1])return in[1].rank;
@@ -108,9 +78,8 @@ int eval(card *in){
 int main(){
 	FILE *file = fopen("p054_poker.txt","r");
 	const int lines = 1000;
-	card p1[lines][5];
-	card p2[lines][5];
-	int i,j,k;
+	card p1[lines][5],p2[lines][5];
+	int i,j,k,t,wins=0;
 	card *h;
 	for(i = 0; i < lines; ++i){
 		for(j = 0;j < 5; ++j){
@@ -126,9 +95,6 @@ int main(){
 		}
 		sort(&p2[i][0],5);
 	}
-
-	int wins = 0;
-	int t;
 	for(i = 0; i < lines; ++i){
 		j = eval(&p1[i][0]);
 		k = eval(&p2[i][0]);
