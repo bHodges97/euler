@@ -34,6 +34,7 @@ void sort(card *in,int size){
 }
 
 int eval(card *in){
+	sort(in,5);
 	bool flush = true,straight = true;
 	bool equ[4];
 	int i;
@@ -80,20 +81,15 @@ int main(){
 	const int lines = 1000;
 	card p1[lines][5],p2[lines][5];
 	int i,j,k,t,wins=0;
-	card *h;
 	for(i = 0; i < lines; ++i){
 		for(j = 0;j < 5; ++j){
-			h = &p1[i][j]; 
-			fscanf(file,"%c%c ",&(*h).rank,&(*h).suit);
-			fix(&(*h).rank);
+			fscanf(file,"%c%c ",&p1[i][j].rank,&p1[i][j].suit);
+			fix(&p1[i][j].rank);
 		}
-		sort(&p1[i][0],5);
 		for(j = 0;j < 5; ++j){
-			h = &p2[i][j]; 
-			fscanf(file,"%c%c ",&(*h).rank,&(*h).suit);
-			fix(&(*h).rank);
+			fscanf(file,"%c%c ",&p2[i][j].rank,&p2[i][j].suit);
+			fix(&p2[i][j].rank);
 		}
-		sort(&p2[i][0],5);
 	}
 	for(i = 0; i < lines; ++i){
 		j = eval(&p1[i][0]);
