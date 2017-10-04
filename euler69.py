@@ -24,6 +24,13 @@ def factorise_set(n):
             i+=1
     return l
 
+def nover(phi):
+    noverphi = phi[:]
+    for i in range(1,n):
+        noverphi[i] = (i)/phi[i]
+    print(noverphi.index(max(noverphi))+1,",",max(noverphi))
+
+
 def solutionA():
     phi = [1] * n
     for i in range(2,n):
@@ -34,14 +41,8 @@ def solutionA():
             coprimes = [ x for x in coprimes if x%factor != 0]
         for coprime in coprimes:
             phi[coprime-1]+=1
-
-    noverphi = phi[:]
-    for i in range(1,n):
-        noverphi[i] = (i+1)/phi[i]
-    noverphi[-1]=0
-    print(noverphi.index(max(noverphi))+1,",",max(noverphi))
-  
-
+    return phi
+    
 def solutionB():
     phi = [-1] * n
     for p in primes:
@@ -64,11 +65,7 @@ def solutionB():
     print(n-len([x for x in phi if x != -1]))
 
     print("Not primes done!")
-    noverphi = phi[:]
-    for i in range(1,n):
-        noverphi[i] = (i)/phi[i]
-    print(noverphi.index(max(noverphi)),",",max(noverphi))
-
+    return phi
 
 def factorise(n):
     i = 0
@@ -96,4 +93,4 @@ def solutionC():
 
 
 
-solutionC()
+nover(solutionB())
