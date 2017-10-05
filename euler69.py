@@ -1,96 +1,128 @@
-f = open("primes.txt","r")
-primes = f.read().split(",")
-primes = [int(x) for x in primes]
-n = 1000000
+import euler
+from euler import *
 
-def generatePrimes(upper):
-    isPrime = list(range(upper))
-    for p in range(2,int(upper**0.5)+1):
-        if isPrime[p]:
-            for multiple in range(p**2,upper,p):
-                isPrime[multiple] = False
-    return [x for x in isPrime[2:] if x]
-
-primes = generatePrimes(n)
-
-def factorise_set(n):
-    i = 0
-    l = set()
-    while n != 1:
-        if n%primes[i] == 0:
-            n/=primes[i]
-            l.add(primes[i])
-        else:
-            i+=1
-    return l
+n =  1000000
+primes = primesUpTo(n)
 
 def nover(phi):
     noverphi = phi[:]
     for i in range(1,n):
         noverphi[i] = (i)/phi[i]
-    print(noverphi.index(max(noverphi))+1,",",max(noverphi))
+    print(noverphi.index(max(noverphi)),",",max(noverphi))
 
 
+#prime factorisation brute force
 def solutionA():
-    phi = [1] * n
-    for i in range(2,n):
-        print(i)
-        factors = factorise(i)
-        coprimes = range(i+1,n)
-        for factor in factors:
-            coprimes = [ x for x in coprimes if x%factor != 0]
-        for coprime in coprimes:
-            phi[coprime-1]+=1
-    return phi
-    
-def solutionB():
-    phi = [-1] * n
-    for p in primes:
-        pk = p
-        k = 1
-        while pk < n:
-            phi[pk]=pk*(1-1/p)
-            k+=1
-            pk*=p
-    print("Primes done!")
- 
-    for i in range(1,n):
-        if i != -1:
-            for j in range(i+1,n):
-                if i*j >= n:
-                    break
-                if j!= -1:
-                    phi[i*j] = phi[i]*phi[j]
-
-    print(n-len([x for x in phi if x != -1]))
-
-    print("Not primes done!")
-    return phi
-
-def factorise(n):
-    i = 0
-    l = []
-    while n != 1:
-        if n%primes[i] == 0:
-            n/=primes[i]
-            l.append(primes[i])
-        else:
-            i+=1
-    return l
-
- 
-def solutionC():
     noverphi = [-1] * n
     for i in range(1,len(noverphi)):
-        f = factorise(i)
+        f = primeFactor(i)
         p = 1
         for fact in f:
             p*=1-1/fact
         noverphi[i]=1/p
         if i % 10000 == 0:
             print(i/n,"% done");
-        
+   
+
+def solutionB():
+    phi = [-1] * n
+    done = [False] * n
+    for p in primes:
+        pk = p
+        k = 1
+        while pk < n:
+            phi[pk]=pk*(1-1/p)
+            done[pk]=True
+            k+=1
+            pk*=p
+    print("Primes done!")
+ 
+    for i in range(1,n):
+        if phi[i] == -1 or not done[i]:
+            continue
+        for j in range(i+1,n):
+            if not done[j]:
+                continue
+            if i*j >= n:
+                break
+            if phi[j] != -1 and not done[i*j]:
+                phi[i*j] = phi[i]*phi[j]
+    print("Primes x1!")
+    for i in range(2,n):
+        if phi[i]!=-1:
+            continue
+        phi[i]=phifunction(i)
+        if i % 1000 == 0:
+            print(i)
+    print("clean up done")
+    return phi
+
+def product(a):
+    b = 1
+    for i in a:
+        b*=i
+    return b
+def sproduct(a):
+    b = 1
+    for i in a:
+        b*=(1-1/i)
+    return b
+
+def solC():
+
+    counter = 0
+    phi = [-1] * (n)
+    psqrd = [-1] * (n)
+    phi[2] = 1
+    psqrda = []
+    for i in primes:
+        psqrda.append([])
+    
+    for p in primes:
+        pk = p
+        k = 1
+        while pk < n:
+            phi[pk]=int(pk*(1-1/p))
+            psqrd[pk]=p
+            #psqrda[primes.index(p)].append(pk)
+            k+=1
+            pk*=p
+            counter+=1
+
+    print(counter/n*100,"% done")
+    for i in range(1,n):
+        if psqrd[i] == -1: 
+            continue
+        for coprime in range(i+1,n):
+            if phi[coprime] == -1 or psqrd[coprime] == -1:
+                continue
+            if psqrd[i] == psqrd[coprime]:
+                continue
+            if i * coprime >= n:
+                break
+            if phi[i] != -1 and phi[i*coprime] == -1 and coprime % i != 0:
+                phi[i*coprime] = phi[i]*phi[coprime]
+                counter+=1
+    
+    print(counter/n*100,"% done")
+    
+    # for i in psqrda[0]:
+    #    while psqrd
 
 
 
-nover(solutionB())
+
+    print(counter/n*100,"% done")
+    missed = 0
+    for i in range(2,n):
+        if phi[i] == -1:
+            phi[i] = euler.phi(i,primes)
+            missed+=1
+            counter+=1
+        if i%10000 == 0:
+            print(counter/n*100,"% done")
+    print("Amount missed",missed)
+    return phi
+
+nover(solC())
+

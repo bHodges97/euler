@@ -13,7 +13,17 @@ def primesUpTo(upper):
 def isPrime(n):
     return True
 
-def primeFactor(n):
+def divisors(n):
+    c = 0
+    for i in range(1,int(n**0.5)+1):
+        if n % i == 0:
+            if i == n**0.5:
+                c+=1
+            else:
+                c+=2
+    return c
+
+def primeFactor(n,primes):
     i = 0
     l = []
     while n != 1:
@@ -22,11 +32,13 @@ def primeFactor(n):
             l.append(primes[i])
         else:
             i+=1
-        return l
+    return l
 
-def phi(n):
-    f = primeFactor(n)
+def phi(n,primes):
+    f = set(primeFactor(n,primes))
     p = 1
     for fact in f:
         p*=1-1/fact
-    return p*a
+    return int(p*n)
+
+
