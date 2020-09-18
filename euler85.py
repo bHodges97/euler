@@ -2,18 +2,10 @@ target = 2000000
 
 #for 1xn:
 def count(width,height):
-    total = 0
-    w1 = width+1
-    h1 = height+1
-    for x in range(1,w1):
-        for y in range(1,h1):
-            total += (w1-x) * (h1-y)
-
-
-
+    total = width * (width + 1) *  height * (height + 1) / 4
     return total
-#test
-#print(count(2,3))
+
+print("test:",count(2,3))
 
 closest = ()
 best = target
