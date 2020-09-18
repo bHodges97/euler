@@ -6,7 +6,7 @@
 int main(){
 	int len = rows*(rows+1)/2;
 	int arr[len];
-	FILE *file = fopen("18.txt","r");
+	FILE *file = fopen("p018.txt","r");
 	for(int i = 0;i < len;++i){
 		fscanf(file,"%d",&arr[i]);
 	}
