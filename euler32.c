@@ -1,54 +1,68 @@
 #include <stdio.h>
+#include <time.h>
+
+int ten(int in){
+	int b=1;
+	for(int i = 0;i < in;++i)b*=10;
+	return b;
+}
+
+int len(int in){
+	for(int i = 9; i > 0; --i)
+		if(in/ten(i))return i+1;
+	return 1;
+}
 
 int main(){
-	int a,b,c = 0;
-	int lista[4],listb[4];
-	int a0[2],b0[2];
-	for(b = 11;b < 100;++b){
-		b0[1] = b/10;
-		b0[0] = b%10;
-		if(b%10==0)continue;
-		for(a = 10;a < b;++a){
-			if(a%b==0)continue;
-			if(a%10==0)continue;
-			a0[1] = a/10;
-			a0[0] = a%10;
-			if(b0[1] == a0[1]){
-				if((float)b/(float)b0[0] == (float)a/(float)a0[0]){
-					lista[c] = a;
-					listb[c] = b;
-					++c;
-					break;					
-				}		
+	clock_t t1, t2;
+	t1 = clock();
+	int digits[10];
+	int dig[9];
+	int t,l0,l1,l2,i0,i1,i2,i,j,k,sum=0;
+	for(int i = 10;i < 1000000;++i){
+		for(j=0;j<10;++j)digits[j]=0;
+		i0=i;
+		l0=len(i0);
+		if(l0==8)continue;
+		for(k = 0;k < l0;++k){
+			t=i0%10;
+			i0/=10;
+			dig[k]=t;
+			if(!t||digits[t]){l0=10;break;}
+			digits[t]=1;
+		}
+		if(l0==10)continue;
+		for(j=1;j*j <= i;++j){
+			if((i%j))continue;
+			for(t=0;t<10;++t)digits[t]=0;
+			for(t=0;t<l0;++t)digits[dig[t]]=1;
+			i1=j;
+			i2=i/j;
+			l1=len(i1);
+			l2=len(i2);
+			if((l0+l1+l2)!=9)continue;
+			for(k = 0;k < l1;++k){
+				t=i1%10;
+				i1/=10;
+				dig[k+l0]=t;
+				if(!t||digits[t]){l1=10;break;}
+				digits[t]=1;
 			}
-			if(b0[1] == a0[0]){
-				if((float)b/(float)b0[0] ==(float)a/(float)a0[1]){
-					lista[c] = a;
-					listb[c] = b;
-					++c;
-					break;
-				}
+			if(l1==10)continue;
+			for(k = 0;k < l2;++k){
+				t=i2%10;
+				i2/=10;
+				dig[k+l0+l1]=t;
+				if(!t||digits[t]){l1=10;break;}
+				digits[t]=1;
 			}
-			if(b0[0] == a0[0]){
-				if((float)b/(float)b0[1] ==(float)a/(float)a0[1]){
-					lista[c] = a;
-					listb[c] = b;
-					++c;
-					break;
-				}
-			}
-			if(b0[1] == a0[1]){
-				if((float)b/(float)b0[1] ==(float)a/(float)a0[0]){
-					lista[c] = a;
-					listb[c] = b;
-					++c;
-					break;
-				}
-			}
+			if(l1==10)continue;
+			sum+=i;
+			break;
 		}
 	}
-	for(int i = 0;i < 4;++i){
-		printf("%d/%d\n",lista[i],listb[i]);
-	}//use a calculator
-
+	t2 = clock();
+	printf("Time taken:%g\n",(float)(t2-t1));
+	printf("%d\n",sum);
 }
+
