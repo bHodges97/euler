@@ -16,8 +16,8 @@ def solve():
         left_tmp = set()
         right_tmp = set()
 
-        #optimisation here maybe?
-        for i in range(1,10):
+        #odds and primes
+        for i in ['1','2','3','5','7','9']:
             i = str(i)
             for x in left_set:
                 left = i+x
