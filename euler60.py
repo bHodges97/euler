@@ -4,6 +4,8 @@ from itertools import combinations
 from primes import *
 from math import ceil
 
+def sort(a,b):
+    return (a,b) if a<b else (b,a)
 
 
 def solve(target):
@@ -24,15 +26,12 @@ def solve(target):
             print("Ran out of primes ya fool!")
             exit()
     #2-cliques,3-cliques...k-cliques
-    k_cliques = [set() for x in range(target-1)]
-    edges = defaultdict(bool)
+    k_cliques = [[] for x in range(target-1)]
     connected = defaultdict(int)
-    graph = set()
-    verts = set()
+    edges = defaultdict(bool)
 
     for idx,b in enumerate(primes):
         x = str(b)
-        new_edges = set()
 
         vertices = set()
         for a in primes[:idx]:
@@ -41,36 +40,33 @@ def solve(target):
             if isprime(x+y) and isprime(y+x):
                 connected[a] += 1
                 connected[b] += 1
+                edges[(a,b)] = True
 
-                if connected[a] >= target-1 and connected[b] >= target-1:
-                    edges[(a,b)] = True
+                if connected[a] >= target-1 or connected[b] >= target-1:
                     edges[(b,a)] = True
-                    new_edges.add((a,b))
+                    clique_new = []
 
-                    vertices.add(a)
-                    vertices.add(b)
+                    for k_clique in k_cliques:
+                        k_clique += clique_new
+                        clique_new = []
+                        for clique in k_clique:
+                            a_in = a in clique
+                            b_in = b in clique
+                            if a_in and b_in:
+                                continue
+                            if a_in and all(edges[sort(x,b)] for x in clique):
+                                new_clique = tuple(list(clique)+[b])
+                                clique_new.append(new_clique)
+                            elif b_in and all(edges[sort(x,a)] for x in clique):
+                                new_clique = tuple(list(clique)+[a])
+                                clique_new.append(new_clique)
+                    k_cliques[0].append((a,b))
 
 
-
-        if new_edges:
-            k_cliques[0] |= new_edges
-                #k-1 ... 0
-
-            clique_new = set()
-            for k_clique in k_cliques:
-                k_clique |= clique_new
-                clique_new = set()
-
-                for clique in k_clique:
-                    for v in vertices:
-                        if all(edges[(x,v)] for x in clique):
-                            new_clique = tuple(sorted(list(clique)+[v]))
-                            clique_new.add(new_clique)
-
-            if k_cliques[-1]:
-                x = k_cliques[-1].pop()
-                print(x,sum(x))
-                #return sum(x)
-                exit()
-print(solve(4))
+                    if k_cliques[-1]:
+                        x = k_cliques[-1].pop()
+                        print(x,sum(x))
+                        #return sum(x)
+                        exit()
+print(solve(5))
 

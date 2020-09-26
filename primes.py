@@ -3,7 +3,6 @@ from math import gcd,prod
 with open("primes.txt","r") as f:
     primes  = [int(x) for x in f.read().split(',')]
 
-
 def eratosthenes_sieve(n):
     out = set(range(2,n))
     for i in range(2,n):
@@ -63,9 +62,10 @@ def farey(limit):
                 break
 
 if __name__ == "__main__":
-    primes = eratosthenes_sieve(10**7)
-    with open("primes.txt",'w') as f:
-        f.write(",".join(map(str,sorted(primes))))
+    pass
+    #primes = eratosthenes_sieve(10**7)
+    #with open("primes.txt",'w') as f:
+    #    f.write(",".join(map(str,sorted(primes))))
 
 
 
